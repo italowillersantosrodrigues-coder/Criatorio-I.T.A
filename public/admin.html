@@ -6,21 +6,52 @@
   <title>Admin — Criatório I.T.A</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background: #0f1720; color: #f5f5f5; font-family: Inter, system-ui, sans-serif; }
-    .card { background: rgba(255,255,255,0.05); border-radius: 12px; border:1px solid rgba(255,255,255,0.1); }
-    .editor-area { min-height: 60vh; background: #1a2536; border-radius: 8px; padding: 16px; }
-    .editor-area[contenteditable="true"]:focus { outline: 2px dashed #facc15; }
-    .drop-zone { border: 2px dashed #666; padding: 30px; text-align: center; color: #aaa; border-radius: 8px; transition: all 0.3s ease; }
-    .drop-zone.dragover { background: rgba(250,204,21,0.1); border-color: #facc15; color: #facc15; }
+    :root{
+      --bg:#0f1720; --card: rgba(255,255,255,0.05);
+      --accent:#facc15; --muted:#9ca3af;
+    }
+    body { background: var(--bg); color: #f5f5f5; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .card { background: var(--card); border-radius: 12px; border:1px solid rgba(255,255,255,0.06); }
+    .editor-area { min-height: 62vh; background: #0b1320; border-radius: 10px; padding: 18px; overflow:auto; }
+    .editor-area[contenteditable="true"]:focus { outline: 2px dashed var(--accent); }
 
-    /* Estilo das imagens redimensionáveis */
-    .resizable { position: relative; display: inline-block; }
-    .resizable img { display: block; max-width: 100%; border-radius: 6px; }
-    .resizer { width: 10px; height: 10px; border: 2px solid #fff; background: #facc15; position: absolute; }
-    .resizer.br { right: -5px; bottom: -5px; cursor: se-resize; }
-    .resizer.bl { left: -5px; bottom: -5px; cursor: sw-resize; }
-    .resizer.tr { right: -5px; top: -5px; cursor: ne-resize; }
-    .resizer.tl { left: -5px; top: -5px; cursor: nw-resize; }
+    .drop-zone { border: 2px dashed #263042; padding: 18px; text-align: center; color: var(--muted); border-radius: 8px; transition: all 0.18s ease; }
+    .drop-zone.dragover { background: rgba(250,204,21,0.06); border-color: var(--accent); color: var(--accent); }
+
+    /* Imagens resizáveis */
+    .resizable { position: relative; display: inline-block; margin: 6px; }
+    .resizable img { display:block; max-width:100%; border-radius:6px; }
+    .resizer { width: 12px; height: 12px; border: 2px solid #111; background: var(--accent); position: absolute; border-radius: 3px; }
+    .resizer.br { right: -6px; bottom: -6px; cursor: se-resize; }
+    .resizer.bl { left: -6px; bottom: -6px; cursor: sw-resize; }
+    .resizer.tr { right: -6px; top: -6px; cursor: ne-resize; }
+    .resizer.tl { left: -6px; top: -6px; cursor: nw-resize; }
+
+    /* Selected image outline */
+    .img-selected { box-shadow: 0 0 0 3px rgba(250,204,21,0.22); border-radius: 6px; }
+
+    /* Floating toolbar */
+    .img-toolbar {
+      position: absolute;
+      z-index: 9999;
+      background: rgba(10,14,20,0.95);
+      border:1px solid rgba(255,255,255,0.06);
+      padding: 8px;
+      border-radius: 8px;
+      display:flex;
+      gap:8px;
+      align-items:center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+      transform-origin: left top;
+    }
+    .img-toolbar button { background:transparent; padding:6px 8px; border-radius:6px; color:#fff; border:1px solid rgba(255,255,255,0.03); cursor:pointer; }
+    .img-toolbar button:hover { background: rgba(250,204,21,0.08); color: #111; border-color: rgba(250,204,21,0.12); }
+    .img-toolbar input[type="range"]{ width:110px; }
+
+    /* small helpers */
+    .muted { color:var(--muted); font-size:0.95rem; }
+    .btn { padding:8px 12px; border-radius:8px; background:var(--accent); color:#111; font-weight:600; }
+    .btn-ghost { background:transparent; border:1px solid rgba(255,255,255,0.04); color:#fff; }
   </style>
 </head>
 <body>
@@ -64,24 +95,47 @@
         <button id="importBtn" class="w-full bg-gray-700 px-3 py-2 rounded mb-4">⬆️ Importar</button>
         <input id="importFile" type="file" accept="application/json" class="hidden"/>
 
-        <button id="logoutBtn" class="w-full bg-red-600 px-3 py-2 rounded">🚪 Sair</button>
+        <div class="mt-4">
+          <button id="logoutBtn" class="w-full bg-red-600 px-3 py-2 rounded">🚪 Sair</button>
+        </div>
+        <p class="muted mt-4">Selecione uma página, clique em "Carregar Página" e depois edite o conteúdo diretamente no editor. Clique em uma imagem para abrir a barra de edição da imagem.</p>
       </aside>
 
       <!-- Editor -->
-      <section class="md:col-span-3 card p-4">
+      <section class="md:col-span-3 card p-4 relative">
         <div class="flex justify-between items-center mb-3">
           <h2 class="text-lg font-semibold">Editando: <span id="editingPage" class="text-yellow-400">Nenhuma</span></h2>
         </div>
-        <div id="editor" class="editor-area" contenteditable="true">
+
+        <div id="editor" class="editor-area" contenteditable="true" spellcheck="false">
           Selecione uma página para editar.
         </div>
 
         <!-- Drop zone para imagens -->
         <div id="dropZone" class="drop-zone mt-4">
-          Arraste imagens aqui para inserir
+          Arraste imagens aqui para inserir (ou clique para selecionar)
         </div>
       </section>
     </div>
+  </div>
+
+  <!-- Toolbar flutuante para imagens -->
+  <div id="imgToolbar" class="img-toolbar" style="display:none;">
+    <input id="replaceInput" type="file" accept="image/*" style="display:none" />
+    <button id="btnReplace" title="Substituir imagem">🔁 Substituir</button>
+    <button id="btnRemove" title="Remover imagem">❌ Remover</button>
+    <button id="btnMoveUp" title="Mover para cima">⬆️</button>
+    <button id="btnMoveDown" title="Mover para baixo">⬇️</button>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <label class="muted" style="font-size:11px">Largura</label>
+      <input id="widthRange" type="range" min="10" max="100" value="50"/>
+    </div>
+    <div style="display:flex;gap:6px;">
+      <button id="alignLeft" title="Alinhar à esquerda">↰</button>
+      <button id="alignCenter" title="Centrar">⬛</button>
+      <button id="alignRight" title="Alinhar à direita">↱</button>
+    </div>
+    <button id="btnLock" title="Bloquear/desbloquear posição">🔒</button>
   </div>
 
   <script src="/js/admin.js"></script>

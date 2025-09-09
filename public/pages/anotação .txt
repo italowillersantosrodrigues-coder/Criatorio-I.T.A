@@ -1,0 +1,14 @@
+# inicializar repositório git
+git init
+
+# conectar com o repositório do GitHub
+git remote add origin https://github.com/SEU-USUARIO/criatorio-ita.git
+
+# adicionar todos os arquivos
+git add .
+
+# salvar primeira versão
+git commit -m "Primeira versão do site Criatório I.T.A"
+
+# enviar para o GitHub
+git push -u origin main
