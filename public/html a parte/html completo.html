@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Criatório I.T.A — Guia de Avicultura</title>
+  <style>
+    :root{--bg:#0f1720;--card:#0b1220;--accent:#d6a800;--muted:#98a4b0;--glass: rgba(255,255,255,0.03)}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial}
+    body{background:linear-gradient(180deg,#071018 0%, #0b1420 100%);color:#e8eef6}
+    .wrap{max-width:1100px;margin:20px auto;padding:18px}
+    header{display:flex;gap:12px;align-items:center}
+    header img.logo{height:78px;object-fit:contain;border-radius:8px}
+    header h1{margin:0;font-size:1.6rem}
+    nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    button.navbtn{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:8px 12px;border-radius:8px;color:var(--accent);cursor:pointer}
+    main{margin-top:18px}
+    .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    h2{margin:6px 0 12px}
+    .small{color:var(--muted);font-size:.9rem}
+    .list{list-style:none;padding:0;margin:0}
+    .list li{padding:10px;border-radius:8px;margin-bottom:8px;background:rgba(0,0,0,0.2);display:flex;justify-content:space-between;align-items:center}
+    .pill{font-size:.85rem;padding:6px 8px;border-radius:6px;background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.02)}
+    .btn{background:var(--accent);color:#071018;padding:8px 10px;border:none;border-radius:8px;cursor:pointer}
+    .mutebtn{background:transparent;color:var(--accent);border:1px solid rgba(255,255,255,0.04);padding:6px 8px;border-radius:8px}
+    .formrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    input,textarea,select{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    textarea{min-height:110px;resize:vertical}
+    .imgthumb{height:60px;border-radius:6px;object-fit:cover}
+    .hidden{display:none}
+    footer{margin-top:18px;color:var(--muted);font-size:.9rem}
+    .topline{display:flex;justify-content:space-between;align-items:center}
+    .search{display:flex;gap:8px;align-items:center}
+    .tag{background:rgba(0,0,0,0.25);padding:6px 8px;border-radius:6px}
+    .adminpanel{border:1px dashed rgba(255,255,255,0.04);padding:10px;border-radius:8px;margin-top:12px}
+    .images-row{display:flex;gap:8px;flex-wrap:wrap}
+    .note{font-size:.85rem;color:var(--muted)}
+    @media (max-width:540px){.formrow{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <!--
+    INSTRUÇÕES RÁPIDAS:
+    - Coloque suas logos na mesma pasta do arquivo e renomeie para: "logo_ita.png" (Criatório I.T.A) e "fedav.png" (FEDAV)
+    - Abra este arquivo no navegador: é um SPA que salva dados localmente (localStorage).
+    - Painel ADMIN com senha padrão: admin
+    - Você pode exportar/importar o conteúdo em JSON para mover entre computadores/serve
+  -->
+
+  <div class="wrap">
+    <header>
+      <img class="logo" id="logo1" src="logo_ita.png" alt="Criatório I.T.A" onerror="this.style.display='none'" />
+      <img class="logo" id="logo2" src="fedav.png" alt="FEDAV" style="height:58px;margin-left:6px" onerror="this.style.display='none'" />
+      <div>
+        <h1>Criatório I.T.A — Guia completo de Avicultura</h1>
+        <div class="small">Conteúdo editável (doenças, medicamentos, rações, manejo, incubação) — sem tocar no código.</div>
+      </div>
+    </header>
+
+    <nav id="navbar">
+      <button class="navbtn" data-page="home">Início</button>
+      <button class="navbtn" data-page="doencas">Doenças</button>
+      <button class="navbtn" data-page="medicamentos">Medicamentos</button>
+      <button class="navbtn" data-page="racoes">Rações</button>
+      <button class="navbtn" data-page="incubacao">Incubação / Chocadeira</button>
+      <button class="navbtn" data-page="manejo">Manejo</button>
+      <button class="navbtn" data-page="aves">Galeria de Aves</button>
+      <button class="navbtn" data-page="admin">Admin</button>
+    </nav>
+
+    <main id="app">
+      <!-- PÁGINAS RENDERIZADAS AQUI -->
+    </main>
+
+    <footer>
+      <div>Desenvolvido para Criatório I.T.A — menção: Federacao de Avicultores de Caculé (FEDAV)</div>
+      <div class="note">Dica: use o painel ADMIN para adicionar doenças/medicamentos/rações/guia de manejo sem editar o arquivo.</div>
+    </footer>
+  </div>
+
+  <template id="tpl-home">
+    <section class="card">
+      <div class="topline"><h2>Bem-vindo ao Criatório I.T.A</h2><div class="tag">Atualizável localmente</div></div>
+      <p class="small">Apresente seu criatório, missão e imagens. As logos aparecem no topo — Certifique-se de ter colocado os arquivos de imagem na mesma pasta do site.</p>
+      <div class="row" style="margin-top:12px">
+        <div class="card">
+          <h3>Resumo rápido</h3>
+          <ul class="list">
+            <li><div>Doenças cadastradas</div><div id="count-doencas" class="pill">0</div></li>
+            <li><div>Medicamentos cadastrados</div><div id="count-meds" class="pill">0</div></li>
+            <li><div>Tipos de ração</div><div id="count-racoes" class="pill">0</div></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Acesso rápido</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" data-goto="doencas">Ver Doenças</button>
+            <button class="btn" data-goto="medicamentos">Ver Medicamentos</button>
+            <button class="mutebtn" data-goto="incubacao">Guia de incubação</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-list">
+    <section>
+      <div class="card">
+        <div class="topline"><h2 id="list-title">List</h2>
+        <div class="search">
+          <input id="q" placeholder="buscar..." />
+          <button id="newitem" class="btn">Novo</button>
+        </div>
+        </div>
+        <ul id="list" class="list" style="margin-top:12px"></ul>
+      </div>
+    </section>
+  </template>
+
+  <template id="tpl-detail">
+    <section class="card">
+      <button id="back" class="mutebtn">◀ Voltar</button>
+      <h2 id="detail-title">Título</h2>
+      <div id="detail-images" class="images-row" style="margin-bottom:8px"></div>
+      <div class="small" id="detail-sintomas"></div>
+      <h3>Medicamentos relacionados</h3>
+      <ul id="detail-meds" class="list"></ul>
+      <h3>Como tratar</h3>
+      <p id="detail-tratamento"></p>
+    </section>
+  </template>
+
+  <template id="tpl-admin">
+    <section class="card">
+      <h2>Painel ADMIN</h2>
+      <div class="small">Senha padrão: <strong>admin</strong>. Você pode alterar a senha em Configurações.</div>
+      <div class="adminpanel">
+        <h3>Exportar / Importar dados</h3>
+        <button id="exportBtn" class="btn">Exportar JSON</button>
+        <input id="importFile" type="file" accept="application/json" />
+        <hr />
+        <h3>Adicionar conteúdo rápido</h3>
+        <div class="formrow">
+          <input id="ana-name" placeholder="Nome (ex: Coccidiose)"/>
+          <select id="ana-type"><option value="doenca">Doença</option><option value="medicamento">Medicamento</option><option value="racao">Ração</option></select>
+        </div>
+        <textarea id="ana-desc" placeholder="Descrição curta"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="ana-img" type="file" accept="image/*" />
+          <button id="ana-save" class="btn">Adicionar</button>
+        </div>
+      </div>
+
+      <div class="adminpanel" style="margin-top:12px">
+        <h3>Configurações</h3>
+        <label class="small">Senha ADMIN atual</label>
+        <div class="formrow"><input id="curpass" type="password" placeholder="senha atual" /><input id="newpass" type="password" placeholder="nova senha" /></div>
+        <button id="changepass" class="btn">Alterar senha</button>
+      </div>
+
+    </section>
+  </template>
+
+  <template id="tpl-incub">
+    <section class="card">
+      <h2>Incubação e Chocadeira</h2>
+      <p class="small">Guia prático: temperatura, umidade, viragem, cuidados pré e pós-eclosão.</p>
+      <h3>Configuração recomendada (exemplo geral)</h3>
+      <ul>
+        <li>Temperatura: 37.5°C ±0.2°C (média durante a incubação).</li>
+        <li>Umidade: 50-55% nos primeiros 18 dias; 65-75% nos 3 últimos dias (período de eclosão).</li>
+        <li>Viragem: a cada 2-4 horas, 45° para cada lado (ou automático).</li>
+        <li>Ventilação: garantir circulação de ar sem correntes frias diretas.</li>
+        <li>Pré-aquecimento: aquecer a chocadeira 4-6h antes de inserir ovos.</li>
+      </ul>
+      <h3>Passo-a-passo</h3>
+      <ol>
+        <li>Seleção: ovos limpos, sem rachaduras, armazenados a 12-15°C por no máximo 7 dias.</li>
+        <li>Posicionamento: com a ponta menor para baixo (ou conforme bandeja).</li>
+        <li>Monitoramento: use termômetro/umidímetro confiável; marque o ovo para viragem manual.</li>
+        <li>Dia 18: transferir para a área de eclosão (se usar bandeja separada), parar de girar.</li>
+        <li>Pós-eclosão: aguardar 24-48h para recolher pintos; fornecer fonte de calor e água rala com glicose por segurança.</li>
+      </ol>
+
+      <h3>Dicas práticas</h3>
+      <ul>
+        <li>Realize controle de temperatura diariamente e registre leituras.</li>
+        <li>Faça testes com pequenas levas antes de ampliar a escala.</li>
+        <li>Use umidificação por bandeja com água filtrada; evite borrifar direto nos ovos.</li>
+      </ul>
+    </section>
+  </template>
+
+  <script>
+    /* ----------------- Estrutura de dados e storage ----------------- */
+    const STORE_KEY = 'ciata_data_v1';
+    const DEFAULT = {
+      adminPass: 'admin',
+      doencas: [
+        {id:genId(),name:'Coccidiose',sintomas:'Diarréia, perda de peso, penas arrepiadas',imgs:[],meds:[],tratamento:'Melhorar biossegurança; sulfonamidas e coccidiostáticos conforme indicação veterinária.'}
+      ],
+      meds: [
+        {id:genId(),name:'Amprolio (exemplo)',dose:'seguir bula/vet',para:'aves jovens/adultas',nota:'Usar sob orientação veterinária',imgs:[]}
+      ],
+      racoes: [
+        {id:genId(),name:'Ração Iniciação 28%',tipo:'Aves de corte / pintos',descricao:'Alta proteína para crescimento rápido.'}
+      ],
+      manejo: {
+        corte:'Sistema de criação, densidade, manejo de terminação...',
+        postura:'Ambientes, ninho, manejo de luz, alimentação para postura...',
+        sertaneja:'Galinha sertaneja (balão) — características: rusticidade, postura moderada, adaptada a caatinga...',
+        indio:'Índio bacana / Índio apurado — descrições sobre conformação e aptidões...',
+        mura:'Mura — características e manejo...'
+      },
+      aves: [
+        {id:genId(),name:'Galinha Caipira',desc:'Rusticidade, boa adaptação',imgs:[]}
+      ]
+    };
+
+    function genId(){return 'id_'+Math.random().toString(36).slice(2,9)}
+    function load(){
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) { localStorage.setItem(STORE_KEY, JSON.stringify(DEFAULT)); return JSON.parse(JSON.stringify(DEFAULT)); }
+      try{return JSON.parse(raw)}catch(e){localStorage.setItem(STORE_KEY,JSON.stringify(DEFAULT));return JSON.parse(JSON.stringify(DEFAULT))}
+    }
+    function save(data){localStorage.setItem(STORE_KEY,JSON.stringify(data));}
+
+    let DB = load();
+
+    /* ----------------- RENDERING E NAVEGAÇÃO ----------------- */
+    const app = document.getElementById('app');
+    const templates = {};
+    document.querySelectorAll('template').forEach(t=>templates[t.id]=t.innerHTML);
+
+    function mount(page){
+      app.innerHTML = templates['tpl-'+page] || templates['tpl-'+page] || '';
+      if(page==='home') renderHome();
+      if(page==='doencas') renderList('doencas');
+      if(page==='medicamentos') renderList('meds');
+      if(page==='racoes') renderList('racoes');
+      if(page==='incubacao') {app.innerHTML = templates['tpl-incub'];}
+      if(page==='manejo') renderManejo();
+      if(page==='aves') renderList('aves');
+      if(page==='admin') renderAdmin();
+      wireNavLinks();
+    }
+
+    function wireNavLinks(){
+      document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',e=>mount(e.currentTarget.dataset.goto)));
+      document.querySelectorAll('.navbtn').forEach(b=>b.addEventListener('click',e=>mount(e.currentTarget.dataset.page)));
+    }
+
+    mount('home');
+
+    /* ----------------- HOME ----------------- */
+    function renderHome(){
+      document.getElementById('count-doencas').textContent = DB.doencas.length;
+      document.getElementById('count-meds').textContent = DB.meds.length;
+      document.getElementById('count-racoes').textContent = DB.racoes.length;
+      document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',e=>mount(e.currentTarget.dataset.goto)));
+    }
+
+    /* ----------------- LIST GENERATOR (doenças, meds, racoes, aves) ----------------- */
+    function renderList(key){
+      const tpl = document.getElementById('tpl-list').innerHTML;
+      app.innerHTML = tpl;
+      const titleMap = {doencas:'Doenças',meds:'Medicamentos',racoes:'Rações',aves:'Galeria de Aves'};
+      document.getElementById('list-title').textContent = titleMap[key]||key;
+      const listEl = document.getElementById('list');
+      const q = document.getElementById('q');
+      const newbtn = document.getElementById('newitem');
+      function redraw(filter){
+        listEl.innerHTML='';
+        DB[key].filter(item=>!filter||JSON.stringify(item).toLowerCase().includes(filter.toLowerCase())).forEach(it=>{
+          const li = document.createElement('li');
+          const left = document.createElement('div');
+          left.innerHTML = '<strong>'+it.name+'</strong><div class="small">'+(it.desc||it.sintomas||it.tipo||'')+'</div>';
+          const right = document.createElement('div');
+          const open = document.createElement('button'); open.textContent='Abrir'; open.className='mutebtn'; open.addEventListener('click',()=>openDetail(key,it.id));
+          const del = document.createElement('button'); del.textContent='Excluir'; del.className='mutebtn'; del.style.marginLeft='8px'; del.addEventListener('click',()=>{if(confirm('Excluir?')){DB[key]=DB[key].filter(x=>x.id!==it.id);save(DB);renderList(key)}})
+          right.appendChild(open); right.appendChild(del);
+          li.appendChild(left); li.appendChild(right);
+          listEl.appendChild(li);
+        })
+      }
+      q.addEventListener('input',()=>redraw(q.value));
+      newbtn.addEventListener('click',()=>openEditor(key));
+      redraw();
+    }
+
+    /* ----------------- DETAIL ----------------- */
+    function openDetail(type,id){
+      const tpl = document.getElementById('tpl-detail').innerHTML; app.innerHTML = tpl;
+      const back = document.getElementById('back'); back.addEventListener('click',()=>mount(type==='m meds'? 'medicamentos': (type==='m'?'medicamentos': type)));
+      const item = DB[type].find(x=>x.id===id);
+      if(!item) { alert('Item não encontrado'); mount('home'); return }
+      document.getElementById('detail-title').textContent = item.name;
+      const imgs = document.getElementById('detail-images'); imgs.innerHTML=''; (item.imgs||[]).forEach(b64=>{
+        const im = document.createElement('img'); im.src=b64; im.className='imgthumb'; imgs.appendChild(im);
+      });
+      document.getElementById('detail-sintomas').textContent = item.sintomas || item.desc || '';
+      const medsList = document.getElementById('detail-meds'); medsList.innerHTML=''; (item.meds||[]).forEach(m => {
+        const med = DB.meds.find(mm=>mm.id===m) || {name:m}; const li = document.createElement('li'); li.textContent = med.name; medsList.appendChild(li);
+      });
+      document.getElementById('detail-tratamento').textContent = item.tratamento || item.detalhe || 'Nenhuma instrução detalhada cadastrada.';
+    }
+
+    /* ----------------- EDITOR (criar/editar) ----------------- */
+    function openEditor(key,existing){
+      // simples prompt-based editor modal
+      const isNew = !existing;
+      const data = existing || {id:genId()};
+      const name = prompt('Nome:', existing? existing.name: ''); if(!name) return;
+      data.name = name;
+      const desc = prompt('Descrição / sintomas:', existing? (existing.sintomas||existing.desc||'') : ''); data.sintomas = desc; data.desc = desc;
+      const tratamento = prompt('Como tratar (resumo):', existing? existing.tratamento || '' : ''); data.tratamento = tratamento;
+      // imagens
+      const addImg = confirm('Deseja adicionar uma imagem (carregar do computador)?');
+      if(addImg){
+        const fileInput = document.createElement('input'); fileInput.type='file'; fileInput.accept='image/*';
+        fileInput.onchange = ()=>{
+          const f = fileInput.files[0]; const reader = new FileReader(); reader.onload = ()=>{
+            data.imgs = data.imgs||[]; data.imgs.push(reader.result);
+            commit();
+          }; reader.readAsDataURL(f);
+        };
+        fileInput.click();
+      } else commit();
+
+      function commit(){
+        if(isNew) DB[key].push(data); else {
+          DB[key] = DB[key].map(x=> x.id===data.id? data : x);
+        }
+        save(DB); mount(key==='meds'?'medicamentos': (key==='doencas'?'doencas': key));
+      }
+    }
+
+    /* ----------------- ADMIN ----------------- */
+    function renderAdmin(){
+      app.innerHTML = templates['tpl-admin'];
+      document.getElementById('exportBtn').addEventListener('click',()=>{
+        const a = document.createElement('a'); a.href = 'data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(DB)); a.download='ciata_export.json'; a.click();
+      });
+      document.getElementById('importFile').addEventListener('change',ev=>{
+        const f = ev.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = ()=>{ try{DB = JSON.parse(r.result); save(DB); alert('Importado com sucesso'); mount('admin'); }catch(e){alert('Arquivo inválido')}}; r.readAsText(f);
+      });
+      document.getElementById('ana-save').addEventListener('click',async ()=>{
+        const n = document.getElementById('ana-name').value.trim(); if(!n){alert('Nome é obrigatório');return}
+        const type = document.getElementById('ana-type').value;
+        const desc = document.getElementById('ana-desc').value;
+        const f = document.getElementById('ana-img').files[0];
+        let b64 = null;
+        if(f){ b64 = await readFileAsDataURL(f); }
+        if(type==='doenca') DB.doencas.push({id:genId(),name:n,sintomas:desc,tratamento:'',imgs: b64? [b64] : []});
+        if(type==='medicamento') DB.meds.push({id:genId(),name:n,dose:'',para:'',nota:desc,imgs: b64? [b64] : []});
+        if(type==='racao') DB.racoes.push({id:genId(),name:n,tipo:desc,descricao:''});
+        save(DB); alert('Adicionado'); mount('admin');
+      });
+
+      document.getElementById('changepass').addEventListener('click',()=>{
+        const cur = document.getElementById('curpass').value; const neu = document.getElementById('newpass').value;
+        if(cur!==DB.adminPass) { alert('Senha atual incorreta'); return; }
+        if(!neu) { alert('Informe nova senha'); return; }
+        DB.adminPass = neu; save(DB); alert('Senha alterada'); document.getElementById('curpass').value=''; document.getElementById('newpass').value='';
+      });
+    }
+
+    /* ----------------- Manejo (exibir textos já no DB) ----------------- */
+    function renderManejo(){
+      app.innerHTML = '<section class="card"><h2>Manejo</h2><h3>Aves de corte</h3><p>'+ (DB.manejo.corte||'Não cadastrado') +'</p><h3>Aves de postura</h3><p>'+ (DB.manejo.postura||'Não cadastrado') +'</p><h3>Galinha sertaneja (balão)</h3><p>'+ (DB.manejo.sertaneja||'Não cadastrado') +'</p><h3>Índio bacana / Índio apurado</h3><p>'+ (DB.manejo.indio||'Não cadastrado') +'</p><h3>Mura</h3><p>'+ (DB.manejo.mura||'Não cadastrado') +'</p></section>';
+    }
+
+    function readFileAsDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }); }
+
+    /* ----------------- INICIALIZAÇÃO: criar atalhos no topo e proteção admin (simples) ----------------- */
+    // proteger exceções do admin: se usuário for visitar admin, pedir senha
+    document.getElementById('navbar').addEventListener('click',e=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      if(btn.dataset.page==='admin'){
+        const pass = prompt('Senha ADMIN:'); if(pass!==DB.adminPass){ alert('Senha incorreta'); e.stopPropagation(); return; } // permite abrir
+      }
+    });
+
+    // inicializar botões de index
+    document.addEventListener('click',e=>{
+      if(e.target.matches('.btn') && e.target.dataset.goto) mount(e.target.dataset.goto);
+    });
+
+    // Expor algumas funções no console para edição rápida
+    window.__CIATA = {
+      DB, save, load, mount, openEditor
+    };
+
+    // Atualiza DB de localStorage no load (caso o usuário importe manualmente)
+    window.addEventListener('storage', ()=>{DB = load();});
+
+  </script>
+</body>
+</html>
