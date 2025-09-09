@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Criatório I.T.A</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #0f1720; color: #f5f5f5; font-family: Inter, system-ui, sans-serif; }
+    .card { background: rgba(255,255,255,0.05); border-radius: 12px; border:1px solid rgba(255,255,255,0.1); }
+    .editor-area { min-height: 60vh; background: #1a2536; border-radius: 8px; padding: 16px; }
+    .editor-area[contenteditable="true"]:focus { outline: 2px dashed #facc15; }
+    .drop-zone { border: 2px dashed #666; padding: 30px; text-align: center; color: #aaa; border-radius: 8px; transition: all 0.3s ease; }
+    .drop-zone.dragover { background: rgba(250,204,21,0.1); border-color: #facc15; color: #facc15; }
+
+    /* Estilo das imagens redimensionáveis */
+    .resizable { position: relative; display: inline-block; }
+    .resizable img { display: block; max-width: 100%; border-radius: 6px; }
+    .resizer { width: 10px; height: 10px; border: 2px solid #fff; background: #facc15; position: absolute; }
+    .resizer.br { right: -5px; bottom: -5px; cursor: se-resize; }
+    .resizer.bl { left: -5px; bottom: -5px; cursor: sw-resize; }
+    .resizer.tr { right: -5px; top: -5px; cursor: ne-resize; }
+    .resizer.tl { left: -5px; top: -5px; cursor: nw-resize; }
+  </style>
+</head>
+<body>
+  <div class="max-w-7xl mx-auto p-6">
+    <header class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold">Painel de Edição — Criatório I.T.A</h1>
+      <a href="/" class="px-4 py-2 bg-yellow-400 text-black rounded font-medium">Voltar ao site</a>
+    </header>
+
+    <!-- Login -->
+    <div id="loginBox" class="card p-6 max-w-md mx-auto">
+      <h2 class="text-xl font-semibold mb-4">Login do Administrador</h2>
+      <label class="block text-sm mb-1">Usuário</label>
+      <input id="adminUser" class="w-full px-3 py-2 rounded text-black mb-3" value="admin"/>
+      <label class="block text-sm mb-1">Senha</label>
+      <input id="adminPass" type="password" class="w-full px-3 py-2 rounded text-black mb-4" value="admin"/>
+      <button id="loginBtn" class="w-full bg-blue-600 px-3 py-2 rounded">Entrar</button>
+      <div id="loginMsg" class="text-sm text-red-400 mt-3"></div>
+    </div>
+
+    <!-- Painel -->
+    <div id="adminPanel" class="hidden grid grid-cols-1 md:grid-cols-4 gap-6">
+      <!-- Sidebar -->
+      <aside class="card p-4">
+        <h2 class="font-semibold mb-3">Gerenciar Páginas</h2>
+        <select id="pageSelect" class="w-full px-2 py-2 rounded text-black mb-4">
+          <option value="home">Início</option>
+          <option value="doencas">Doenças</option>
+          <option value="medicamentos">Medicamentos</option>
+          <option value="racoes">Rações</option>
+          <option value="incubacao">Incubação</option>
+          <option value="manejo">Manejo</option>
+          <option value="aves">Galeria</option>
+        </select>
+        <button id="loadPageBtn" class="w-full bg-yellow-500 text-black px-3 py-2 rounded mb-4">Carregar Página</button>
+
+        <h2 class="font-semibold mb-3">Ações</h2>
+        <button id="saveBtn" class="w-full bg-green-600 px-3 py-2 rounded mb-2">💾 Salvar</button>
+        <button id="revertBtn" class="w-full bg-gray-700 px-3 py-2 rounded mb-2">↩️ Reverter</button>
+        <button id="exportBtn" class="w-full bg-gray-700 px-3 py-2 rounded mb-2">⬇️ Exportar</button>
+        <button id="importBtn" class="w-full bg-gray-700 px-3 py-2 rounded mb-4">⬆️ Importar</button>
+        <input id="importFile" type="file" accept="application/json" class="hidden"/>
+
+        <button id="logoutBtn" class="w-full bg-red-600 px-3 py-2 rounded">🚪 Sair</button>
+      </aside>
+
+      <!-- Editor -->
+      <section class="md:col-span-3 card p-4">
+        <div class="flex justify-between items-center mb-3">
+          <h2 class="text-lg font-semibold">Editando: <span id="editingPage" class="text-yellow-400">Nenhuma</span></h2>
+        </div>
+        <div id="editor" class="editor-area" contenteditable="true">
+          Selecione uma página para editar.
+        </div>
+
+        <!-- Drop zone para imagens -->
+        <div id="dropZone" class="drop-zone mt-4">
+          Arraste imagens aqui para inserir
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
